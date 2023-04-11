@@ -9,7 +9,7 @@ namespace csharp_biblioteca
     // Definizione della classe DVD, che eredita dalla classe Documento
     class DVD : Documento
     {
-        // Definizione della proprietà aggiuntiva del DVD
+        // Definizione della proprietà aggiuntiva del DVD "TimeSpan(Int32, Int32, Int32)"
         public TimeSpan durata;
 
         // Costruttore della classe DVD

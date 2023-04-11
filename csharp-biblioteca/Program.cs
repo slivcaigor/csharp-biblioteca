@@ -1,31 +1,10 @@
 ﻿/*
-    Si vuole progettare un sistema per la gestione di una biblioteca.
-    Gli utenti si possono registrare al sistema, fornendo:
-
-    cognome
-    nome
-    email
-    password
-    recapito telefonico
-
-    Gli utenti registrati possono prendere in prestito dei documenti che sono di vario tipo (libri, DVD).
-    I documenti sono caratterizzati da:
-
-    un codice identificativo di tipo stringa
-    titolo
-    anno
-    settore (storia, matematica, economia, …)
-    uno scaffale in cui è posizionato
-    un autore (Nome, Cognome)
-
-
-    Per i libri si ha in aggiunta il numero di pagine, mentre per i dvd la durata.
 
     L’utente deve poter eseguire delle ricerche per codice o per titolo e, eventualmente, prendere in prestito registrando il periodo (Dal/Al) del prestito e il documento.
 
     Deve essere possibile effettuare la ricerca dei prestiti dato nome e cognome di un utente.
 
-    Creiamo anche una classe Biblioteca che contiene la lista dei documenti, la lista degli utenti e la lista dei prestiti. Contiene inoltre i metodi per le ricerche e per l’aggiunta dei documenti, utenti e prestiti.
+    Contiene inoltre i metodi per le ricerche e per l’aggiunta dei documenti, utenti e prestiti.
 */
 
 namespace csharp_biblioteca
@@ -34,7 +13,24 @@ namespace csharp_biblioteca
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            // Creazione di un'istanza della classe Biblioteca
+            Biblioteca biblioteca = new();
+
+            // Aggiunta di alcuni utenti alla lista degli utenti
+            biblioteca.AggiungiUtente(new Utente("Rossi", "Mario", "mario.rossi@mail.com", "password123", "+39 02 1234567"));
+            biblioteca.AggiungiUtente(new Utente("Verdi", "Giuseppe", "giuseppe.verdi@mail.com", "password456", "+39 02 7654321"));
+
+            // Aggiunta di alcuni documenti alla lista dei documenti
+            biblioteca.AggiungiDocumento(new Libro("LIB0001", "L'archivio segreto del Vaticano", 1972, "Storia", "A1", new Autore("Maria", "Ambrosini"), 397));
+            biblioteca.AggiungiDocumento(new DVD("DVD0001", "The Mark Wahlberg: 5-Film Collection", 2015, "Action", "B2", new Autore("Mark", "Wahlberg"), new TimeSpan(10, 23, 0)));
+
+            // Esempio di ricerca di un documento per codice
+            string codiceDocumento = "LIB0001";
+            Console.WriteLine($"Risultati della ricerca per codice {codiceDocumento}:");
+            foreach (Documento documento in biblioteca.CercaPerCodice(codiceDocumento))
+            {
+                Console.WriteLine($"{documento.titolo} ({documento.anno}) di {documento.autore.nome} {documento.autore.cognome}");
+            }
         }
     }
 }
