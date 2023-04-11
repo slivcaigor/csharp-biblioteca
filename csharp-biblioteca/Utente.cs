@@ -26,5 +26,7 @@ namespace csharp_biblioteca
             this.password = password;
             this.telefono = telefono;
         }
+
+       
     }
 }

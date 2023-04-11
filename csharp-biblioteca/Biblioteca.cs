@@ -74,5 +74,27 @@ namespace csharp_biblioteca
             }
             return risultati;
         }
+
+        // Metodo per registrare un utente
+        public Utente RegistraUtente(string cognome, string nome, string email, string password, string telefono)
+        {
+            Utente utente = new(cognome, nome, email, password, telefono);
+            AggiungiUtente(utente);
+            return utente;
+        }
+
+
+        // Metodo per effettuare il login
+        public Utente? Login(string email, string password)
+        {
+            foreach (Utente utente in utenti)
+            {
+                if (utente.email == email && utente.password == password)
+                {
+                    return utente;
+                }
+            }
+            return null;
+        }
     }
 }
