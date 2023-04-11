@@ -1,10 +1,5 @@
 ﻿/*
-
-    L’utente deve poter eseguire delle ricerche per codice o per titolo e, eventualmente, prendere in prestito registrando il periodo (Dal/Al) del prestito e il documento.
-
-    Deve essere possibile effettuare la ricerca dei prestiti dato nome e cognome di un utente.
-
-    Contiene inoltre i metodi per le ricerche e per l’aggiunta dei documenti, utenti e prestiti.
+    prendere in prestito registrando il periodo (Dal/Al) del prestito e il documento.
 */
 
 namespace csharp_biblioteca
@@ -39,6 +34,35 @@ namespace csharp_biblioteca
             {
                 Console.WriteLine($"{documento.titolo} ({documento.anno}) di {documento.autore.nome} {documento.autore.cognome}");
             }
+
+            // Esempio di prestito di un documento a un utente
+            Utente utente = biblioteca.utenti[0];
+            Documento documentoDaPrendereInPrestito1 = biblioteca.documenti[0];
+            DateTime dal1 = DateTime.Now;
+            DateTime al1 = dal1.AddDays(7);
+            Prestito prestito1 = new(utente, documentoDaPrendereInPrestito1, dal1, al1);
+            biblioteca.AggiungiPrestito(prestito1);
+
+            Documento documentoDaPrendereInPrestito2 = biblioteca.documenti[1];
+            DateTime dal2 = DateTime.Now;
+            DateTime al2 = dal2.AddDays(5);
+            Prestito prestito2 = new(utente, documentoDaPrendereInPrestito2, dal2, al2);
+            biblioteca.AggiungiPrestito(prestito2);
+
+
+            // Esempio di ricerca dei prestiti effettuati da un utente
+            string cognomeUtente = "Rossi";
+            string nomeUtente = "Mario";
+            Console.WriteLine($"Risultati della ricerca dei prestiti di {nomeUtente} {cognomeUtente}:");
+            foreach (Prestito prestitoCorrente in biblioteca.CercaPrestitiPerUtente(cognomeUtente, nomeUtente))
+            {
+                Console.WriteLine($"{prestitoCorrente.documento.titolo} ({prestitoCorrente.documento.anno}) di {prestitoCorrente.documento.autore.nome} {prestitoCorrente.documento.autore.cognome} (dal {prestitoCorrente.dal.ToShortDateString()} al {prestitoCorrente.al.ToShortDateString()})");
+            }
+
+
+            // Attesa di un input dall'utente prima di chiudere la console
+            Console.WriteLine("Premi un tasto per uscire...");
+            Console.ReadKey();
         }
     }
 }

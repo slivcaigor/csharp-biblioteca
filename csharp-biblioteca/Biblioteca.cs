@@ -60,5 +60,19 @@ namespace csharp_biblioteca
             }
             return risultati;
         }
+
+        // Metodo per cercare i prestiti effettuati da un determinato utente
+        public List<Prestito> CercaPrestitiPerUtente(string cognome, string nome)
+        {
+            List<Prestito> risultati = new();
+            foreach (Prestito prestito in prestiti)
+            {
+                if (prestito.utente.cognome == cognome && prestito.utente.nome == nome)
+                {
+                    risultati.Add(prestito);
+                }
+            }
+            return risultati;
+        }
     }
 }
