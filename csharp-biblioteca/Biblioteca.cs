@@ -96,5 +96,28 @@ namespace csharp_biblioteca
             }
             return null;
         }
+
+        // Metodo per creare un prestito
+        public Prestito CreaPrestito(Utente utente, Documento documento, DateTime inizioPrestito, DateTime finePrestito)
+        {
+            Prestito prestito = new Prestito(utente, documento, inizioPrestito, finePrestito);
+            prestiti.Add(prestito);
+            return prestito;
+        }
+
+        // Cerca documnento specifico in base al codice
+        public Documento? CercaDocumentoPerCodice(string codice)
+        {
+            foreach (Documento documento in documenti)
+            {
+                if (documento.codice == codice)
+                {
+                    return documento;
+                }
+            }
+            return null;
+        }
+
+
     }
 }

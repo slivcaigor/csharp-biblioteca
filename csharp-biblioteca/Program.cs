@@ -1,5 +1,6 @@
 ﻿
 using csharp_biblioteca;
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 
@@ -169,7 +170,8 @@ namespace csharp_biblioteca
                                 Console.WriteLine("1. Ricerca per codice");
                                 Console.WriteLine("2. Ricerca per titolo");
                                 Console.WriteLine("3. Prestito");
-                                Console.WriteLine("4. Esci");
+                                Console.WriteLine("4. I miei prestiti");
+                                Console.WriteLine("5. Esci");
 
                                 ConsoleKeyInfo sceltaMenu = Console.ReadKey();
                                 Console.Clear();
@@ -234,9 +236,99 @@ namespace csharp_biblioteca
                                         }
                                         break;
                                     case '3':
-                                        // Codice per il prestito
+                                        Console.Clear();
+
+                                        // Chiedere il codice del documento
+                                        string codiceDocumento;
+                                        Regex codiceDoc = new(@"^(LIB|DVD)\d{4}$");
+
+                                        do
+                                        {
+                                            Console.Write("Inserisci il codice del documento (es. LIB0001 o DVD0001): ");
+                                            codiceDocumento = Console.ReadLine() ?? string.Empty;
+
+                                            if (string.IsNullOrWhiteSpace(codiceDocumento) || !codiceDoc.IsMatch(codiceDocumento))
+                                            {
+                                                Console.WriteLine("Inserisci un codice valido (es. LIB0001 o DVD0001).");
+                                            }
+                                        } while (string.IsNullOrWhiteSpace(codiceDocumento) || !codiceDoc.IsMatch(codiceDocumento));
+
+
+                                        // Cerca il documento nella biblioteca
+                                        Documento? documentoDaPrendereInPrestito = biblioteca.CercaDocumentoPerCodice(codiceDocumento);
+
+                                        // Controlla se il documento è stato trovato
+                                        if (documentoDaPrendereInPrestito == null)
+                                        {
+                                            Console.WriteLine("Documento non trovato.");
+                                        }
+                                        else
+                                        {
+                                            DateTime inizioPrestito;
+                                            DateTime finePrestito;
+
+                                            do
+                                            {
+                                                Console.Write("Inserisci la data di inizio del prestito (formato: dd/MM/yyyy): ");
+                                                string inputInizioPrestito = Console.ReadLine() ?? string.Empty;
+
+                                                if (DateTime.TryParseExact(inputInizioPrestito, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out inizioPrestito))
+                                                {
+                                                    break;
+                                                }
+                                                else
+                                                {
+                                                    Console.WriteLine("Data non valida, riprova.");
+                                                }
+                                            } while (true);
+
+                                            do
+                                            {
+                                                Console.Write("Inserisci la data di fine del prestito (formato: dd/MM/yyyy): ");
+                                                string inputFinePrestito = Console.ReadLine() ?? string.Empty;
+
+                                                if (DateTime.TryParseExact(inputFinePrestito, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out finePrestito))
+                                                {
+                                                    break;
+                                                }
+                                                else
+                                                {
+                                                    Console.WriteLine("Data non valida, riprova.");
+                                                }
+                                            } while (true);
+
+
+                                            // Crea il prestito
+                                            _ = biblioteca.CreaPrestito(utenteLoggato, documentoDaPrendereInPrestito, inizioPrestito, finePrestito);
+
+                                            Console.WriteLine($"Prestito creato con successo per {utenteLoggato.nome} {utenteLoggato.cognome} per il documento: {documentoDaPrendereInPrestito.titolo} dal {inizioPrestito:dd/MM/yyyy} al {finePrestito:dd/MM/yyyy}");
+                                        }
                                         break;
                                     case '4':
+                                        // Codice per visualizzare i prestiti dell'utente loggato
+                                        List<Prestito> prestitiUtente = biblioteca.CercaPrestitiPerUtente(utenteLoggato.cognome, utenteLoggato.nome);
+
+                                        if (prestitiUtente.Count > 0)
+                                        {
+                                            Console.WriteLine("Elenco dei prestiti:");
+                                            foreach (Prestito prestito in prestitiUtente)
+                                            {
+                                                Console.WriteLine($"Documento: {prestito.documento.codice} - {prestito.documento.titolo}");
+                                                Console.WriteLine($"Inizio prestito: {prestito.dal:dd/MM/yyyy}");
+                                                Console.WriteLine($"Fine prestito: {prestito.al:dd/MM/yyyy}");
+                                                Console.WriteLine("-----------------------------------------");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("Non hai prestiti attivi.");
+                                        }
+
+                                        Console.WriteLine("Premi un tasto per continuare...");
+                                        Console.ReadKey();
+                                        break;
+
+                                    case '5':
                                         continua = false;
                                         break;
                                     default:
