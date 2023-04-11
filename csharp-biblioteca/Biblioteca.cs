@@ -46,5 +46,19 @@ namespace csharp_biblioteca
             }
             return risultati;
         }
+
+        // Metodo per cercare i documenti con un determinato titolo
+        public List<Documento> CercaPerTitolo(string titolo)
+        {
+            List<Documento> risultati = new();
+            foreach (Documento documento in documenti)
+            {
+                if (documento.titolo == titolo)
+                {
+                    risultati.Add(documento);
+                }
+            }
+            return risultati;
+        }
     }
 }

@@ -31,6 +31,14 @@ namespace csharp_biblioteca
             {
                 Console.WriteLine($"{documento.titolo} ({documento.anno}) di {documento.autore.nome} {documento.autore.cognome}");
             }
+
+            // Esempio di ricerca di un documento per titolo
+            string titoloDocumento = "The Mark Wahlberg: 5-Film Collection";
+            Console.WriteLine($"Risultati della ricerca per titolo {titoloDocumento}:");
+            foreach (Documento documento in biblioteca.CercaPerTitolo(titoloDocumento))
+            {
+                Console.WriteLine($"{documento.titolo} ({documento.anno}) di {documento.autore.nome} {documento.autore.cognome}");
+            }
         }
     }
 }
