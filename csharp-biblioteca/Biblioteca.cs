@@ -53,7 +53,7 @@ namespace csharp_biblioteca
             List<Documento> risultati = new();
             foreach (Documento documento in documenti)
             {
-                if (documento.titolo == titolo)
+                if (documento.titolo.ToLower().Contains(titolo.ToLower()))
                 {
                     risultati.Add(documento);
                 }

@@ -1,8 +1,8 @@
 ﻿
-// Creazione di un'istanza della classe Biblioteca
 using csharp_biblioteca;
 using System.Text.RegularExpressions;
 
+// Creazione di un'istanza della classe Biblioteca
 Biblioteca biblioteca = new();
 
 // Aggiunta di alcuni libri alla lista dei documenti
@@ -29,46 +29,82 @@ biblioteca.AggiungiDocumento(new DVD("DVD0008", "The Harry Potter Collection", 2
 biblioteca.AggiungiDocumento(new DVD("DVD0009", "The Star Wars Collection", 2015, "Science Fiction", "D1", new Autore("George", "Lucas"), new TimeSpan(20, 30, 0)));
 biblioteca.AggiungiDocumento(new DVD("DVD0010", "The Jurassic Park Collection", 2015, "Science Fiction", "F1", new Autore("Steven", "Spielberg"), new TimeSpan(10, 0, 0)));
 
+// Mostra un messaggio di benvenuto e chiede all'utente di scegliere la modalità di ricerca
 Console.WriteLine("Benvenuto nella Biblioteca! Scegli la modalità di ricerca:\n1. Ricerca per codice\n2. Ricerca per titolo");
-string scelta = Console.ReadLine() ?? string.Empty;
 
-while (scelta != "1" && scelta != "2")
+// Legge l'input dell'utente e lo memorizza nella variabile "scelta"
+ConsoleKeyInfo scelta = Console.ReadKey();
+
+// Continua a chiedere all'utente di inserire una scelta valida (1 o 2) finché l'input non è corretto
+while (scelta.KeyChar != '1' && scelta.KeyChar != '2')
 {
-    Console.WriteLine("Scelta non valida. Inserisci 1 per la ricerca per codice o 2 per la ricerca per titolo.");
-    scelta = Console.ReadLine() ?? string.Empty;
+    Console.WriteLine("\nScelta non valida. Premi 1 per la ricerca per codice o 2 per la ricerca per titolo.");
+    scelta = Console.ReadKey();
+
 }
 
-if (scelta == "1")
+// Se l'utente ha scelto la modalità di ricerca per codice
+if (scelta.KeyChar == '1')
 {
+    // Pulisce la console
+    Console.Clear();
+    // Chiede all'utente di inserire il codice del libro o DVD da cercare
     Console.Write("Inserisci il codice del libro o DVD da cercare (formato: LIB0001 per i libri e DVD0001 per i DVD): ");
+    // Legge l'input dell'utente e lo memorizza nella variabile "codice"
     string codice = Console.ReadLine() ?? string.Empty;
 
-    // Verifica se il codice è nel formato corretto
+    // Verifica che il codice inserito sia nel formato corretto (LIBxxxx o DVDxxxx)
     Regex regexCodice = new(@"^(LIB|DVD)\d{4}$");
     while (!regexCodice.IsMatch(codice))
     {
+        // Se il formato non è corretto, chiede all'utente di inserire nuovamente il codice
         Console.WriteLine("Formato del codice non valido (formato: LIB0001 per i libri e DVD0001 per i DVD): ");
         codice = Console.ReadLine() ?? string.Empty;
     }
 
+    // Mostra i risultati della ricerca per codice
     Console.WriteLine($"Risultati della ricerca per codice {codice}:");
     foreach (Documento documento in biblioteca.CercaPerCodice(codice))
     {
         Console.WriteLine($"{documento.titolo} ({documento.anno}) di {documento.autore.nome} {documento.autore.cognome}");
     }
 }
-else if (scelta == "2")
+// Se l'utente ha scelto la modalità di ricerca per titolo
+else if (scelta.KeyChar == '2')
 {
-    Console.Write("Inserisci il titolo del libro da cercare: ");
+    // Pulisce la console
+    Console.Clear();
+    // Chiede all'utente di inserire il titolo del libro o DVD da cercare
+    Console.Write("Inserisci il titolo del libro o DVD da cercare: ");
+    // Legge l'input dell'utente e lo memorizza nella variabile "titolo"
     string titolo = Console.ReadLine() ?? string.Empty;
 
-    Console.WriteLine($"Risultati della ricerca per titolo {titolo}:");
-    foreach (Documento documento in biblioteca.CercaPerTitolo(titolo))
+    // Continua a chiedere all'utente di inserire un titolo valido finché l'input non è corretto
+    while (string.IsNullOrWhiteSpace(titolo))
     {
-        Console.WriteLine($"{documento.titolo} ({documento.anno}) di {documento.autore.nome} {documento.autore.cognome}");
+        Console.WriteLine("Titolo non valido. Inserisci un titolo valido: ");
+        titolo = Console.ReadLine() ?? string.Empty;
+    }
+
+    Console.WriteLine($"Risultati della ricerca per titolo \"{titolo}\":");
+
+    // Mostra i risultati della ricerca per titolo
+    List<Documento> documentiTrovati = biblioteca.CercaPerTitolo(titolo);
+    if (documentiTrovati.Count == 0)
+    {
+        Console.WriteLine("Nessun risultato trovato.");
+    }
+    else
+    {
+        foreach (Documento documento in documentiTrovati)
+        {
+            Console.WriteLine($"{documento.titolo} ({documento.anno}) di {documento.autore.nome} {documento.autore.cognome}");
+        }
     }
 }
 
+// Chiedi all'utente di premere un tasto per uscire
+Console.WriteLine("\nPremi un tasto per uscire.");
+Console.ReadKey();
 
 
-Console.ReadLine();
